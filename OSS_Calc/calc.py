@@ -1,5 +1,7 @@
 import tkinter as tk
-
+import numpy as np
+from ast impoer literal_eval
+import math
 
 class Calculator:
     def __init__(self, root):
@@ -19,7 +21,7 @@ class Calculator:
             ['4', '5', '6', '*'],
             ['1', '2', '3', '-'],
             ['0', '.', 'C', '+'],
-            ['=']
+            ['=' , 'rank/sol']
         ]
 
         for row in buttons:
@@ -42,6 +44,34 @@ class Calculator:
                 self.expression = str(eval(self.expression))
             except Exception:
                 self.expression = "에러"
+        elif char == 'rank/sol':
+            try:
+                # 입력 형식: [[계수행렬]]; [오른쪽 벡터]
+                A_str, B_str = self.expression.split(';')
+                A = literal_eval(A_str.strip())
+                B = literal_eval(B_str.strip())
+
+                A = np.array(A, dtype=float)
+                B = np.array(B, dtype=float).reshape(-1, 1)
+
+                # 첨가 행렬
+                augmented = np.hstack([A, B])
+
+                rank_A = np.linalg.matrix_rank(A)
+                rank_aug = np.linalg.matrix_rank(augmented)
+                n_vars = A.shape[1]
+
+                if rank_A != rank_aug:
+                    result = f"rank={rank_A}, count=none"
+                elif rank_A == n_vars:
+                    result = f"rank={rank_A}, count=unique"
+                else:
+                    result = f"rank={rank_A}, count=infinite"
+
+                self.expression = result
+            except:
+                self.expression = "에러"
+            
         else:
             self.expression += str(char)
 
