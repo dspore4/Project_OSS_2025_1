@@ -19,7 +19,7 @@ class Calculator:
             ['4', '5', '6', '*'],
             ['1', '2', '3', '-'],
             ['0', '.', 'C', '+'],
-            ['=']
+            ['=','inch->cm']
         ]
 
         for row in buttons:
@@ -42,11 +42,16 @@ class Calculator:
                 self.expression = str(eval(self.expression))
             except Exception:
                 self.expression = "에러"
+        elif char == 'inch->cm':
+            try:
+                value = float(self.expression)
+                self.expression = str(roung(value * 2.54, 4)) + " cm"
+            except:
+                self.expression = "에러"
         else:
             self.expression += str(char)
 
         self.entry.delete(0, tk.END)
         self.entry.insert(tk.END, self.expression)
-
 
 
